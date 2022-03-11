@@ -106,13 +106,13 @@ public class RayTracingPass : ScriptableRenderPass
             m_rayTracing.RayTracingShader.SetVector(DirectionalLightId, new Vector4(mainLight.transform.forward.x,mainLight.transform.forward.y,mainLight.transform.forward.z, mainLight.intensity));
 
             //RayTracing Objects
-            m_rayTracing.SetRayTracingObjectsParameters();
+            m_rayTracing.SetRayTracingObjectsParameters(cmd);
 
             //Compute
             int threadGroupsX = Mathf.CeilToInt(w / 8.0f);
             int threadGroupsY = Mathf.CeilToInt(h / 8.0f);
             m_rayTracing.RayTracingShader.Dispatch(0, threadGroupsX, threadGroupsY, 1);
-        }        
+        } 
 
         //Accumulate Sampling
         if(m_rayTracing.AccSample.value)

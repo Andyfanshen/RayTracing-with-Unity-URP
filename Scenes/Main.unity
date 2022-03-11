@@ -368,6 +368,7 @@ GameObject:
   - component: {fileID: 647641998}
   - component: {fileID: 647641997}
   - component: {fileID: 647641996}
+  - component: {fileID: 647642000}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: RayTracing
@@ -446,14 +447,29 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 647641995}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.194, y: 1.049, z: -2.651}
   m_LocalScale: {x: 0.54038, y: 0.54038, z: 0.54038}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 834217226}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &647642000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 647641995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940012e1ea39d624ebbe4bdc4fd1116d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseTexture: {fileID: 2800000, guid: 52b69d67fe31bf24ea330012f80b82d0, type: 3}
+  normalTexture: {fileID: 2800000, guid: 55eaa53217413d644bb99287a8309344, type: 3}
+  MASKTexture: {fileID: 2800000, guid: 98016d67bcae626479438be6eec7cd2c, type: 3}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -501,6 +517,41 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &834217225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 834217226}
+  m_Layer: 0
+  m_Name: GameObjs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &834217226
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 834217225}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.029}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1973770583}
+  - {fileID: 1588780610}
+  - {fileID: 923861636}
+  - {fileID: 647641999}
+  m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &923861632
@@ -515,6 +566,7 @@ GameObject:
   - component: {fileID: 923861635}
   - component: {fileID: 923861634}
   - component: {fileID: 923861633}
+  - component: {fileID: 923861637}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: RayTracing
@@ -593,14 +645,29 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 923861632}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.79, y: 1.047, z: 1.04}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.424, y: 1.047, z: 1.04}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 834217226}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &923861637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 923861632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940012e1ea39d624ebbe4bdc4fd1116d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseTexture: {fileID: 2800000, guid: 52b69d67fe31bf24ea330012f80b82d0, type: 3}
+  normalTexture: {fileID: 2800000, guid: 55eaa53217413d644bb99287a8309344, type: 3}
+  MASKTexture: {fileID: 2800000, guid: 98016d67bcae626479438be6eec7cd2c, type: 3}
 --- !u!1 &1588780606
 GameObject:
   m_ObjectHideFlags: 0
@@ -613,6 +680,7 @@ GameObject:
   - component: {fileID: 1588780609}
   - component: {fileID: 1588780608}
   - component: {fileID: 1588780607}
+  - component: {fileID: 1588780611}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: RayTracing
@@ -690,14 +758,29 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1588780606}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.545, y: 0.834, z: -1.27}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.235, y: 0.834, z: -1.083}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 834217226}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1588780611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588780606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940012e1ea39d624ebbe4bdc4fd1116d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseTexture: {fileID: 2800000, guid: 52b69d67fe31bf24ea330012f80b82d0, type: 3}
+  normalTexture: {fileID: 2800000, guid: 55eaa53217413d644bb99287a8309344, type: 3}
+  MASKTexture: {fileID: 2800000, guid: 98016d67bcae626479438be6eec7cd2c, type: 3}
 --- !u!1 &1973770578
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,6 +793,7 @@ GameObject:
   - component: {fileID: 1973770582}
   - component: {fileID: 1973770581}
   - component: {fileID: 1973770580}
+  - component: {fileID: 1973770584}
   m_Layer: 0
   m_Name: Cube
   m_TagString: RayTracing
@@ -787,11 +871,26 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1973770578}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 1.691, y: 0.69, z: -0.435}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_Father: {fileID: 834217226}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1973770584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973770578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 940012e1ea39d624ebbe4bdc4fd1116d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseTexture: {fileID: 2800000, guid: 52b69d67fe31bf24ea330012f80b82d0, type: 3}
+  normalTexture: {fileID: 2800000, guid: 55eaa53217413d644bb99287a8309344, type: 3}
+  MASKTexture: {fileID: 2800000, guid: 98016d67bcae626479438be6eec7cd2c, type: 3}

@@ -33,11 +33,21 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
 
     private static List<int> _indices = new List<int>();
 
+    private static readonly int mapWidth = 1024;
+    private static readonly int mapHeight = 1024;
+    private static List<RenderTargetIdentifier> _baseMaps = new List<RenderTargetIdentifier>();
+    private static List<RenderTargetIdentifier> _normalMaps = new List<RenderTargetIdentifier>();
+    private static List<RenderTargetIdentifier> _MASKMaps = new List<RenderTargetIdentifier>();
+
     private static ComputeBuffer _meshObjectBuffer;
 
     private static ComputeBuffer _vertexBuffer;
 
     private static ComputeBuffer _indexBuffer;
+
+    private static Texture2DArray _baseMapArray = null;
+    private static Texture2DArray _normalMapArray = null;
+    private static Texture2DArray _MASKMapArray = null;
 
     public bool IsActive()
     {
@@ -151,6 +161,21 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
         }
     }
 
+    private bool CreateTexture3D(CommandBuffer cmd, List<RenderTargetIdentifier> textures, ref Texture2DArray texture2DArray)
+    {
+        if(textures.Count>0)
+        {
+            texture2DArray = new Texture2DArray(mapWidth, mapHeight, textures.Count, TextureFormat.RGBA32, true, true);
+            for (int i = 0; i < textures.Count; i++)
+            {
+                cmd.ConvertTexture(textures[i], 0, texture2DArray, i);
+            }
+
+            return true;
+        }
+        return false;
+    }
+
     private void SetComputeBuffer(string name, ComputeBuffer buffer)
     {
         if(buffer != null)
@@ -159,11 +184,14 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
         }
     }
 
-    private void BuildMeshObjectBuffers()
+    public void SetRayTracingObjectsParameters(CommandBuffer cmd)
     {
         _meshObjects.Clear();
         _vertices.Clear();
         _indices.Clear();
+        _baseMaps.Clear();
+        _normalMaps.Clear();
+        _MASKMaps.Clear();
 
         var _rayTracingObjects = GameObject.FindGameObjectsWithTag("RayTracing");
 
@@ -184,18 +212,23 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
                 indices_offset = firstIndex,
                 indices_count = indices.Length
             });
+
+            obj.GetComponent<RayTracingMat>().AddTextures(_baseMaps, _normalMaps, _MASKMaps);
         }
 
         CreateComputeBuffer(ref _meshObjectBuffer, _meshObjects, 72);
         CreateComputeBuffer(ref _vertexBuffer, _vertices, 12);
         CreateComputeBuffer(ref _indexBuffer, _indices, 4);
-    }
 
-    public void SetRayTracingObjectsParameters()
-    {
-        BuildMeshObjectBuffers();
         SetComputeBuffer("_MeshObjects", _meshObjectBuffer);
         SetComputeBuffer("_Vertices", _vertexBuffer);
         SetComputeBuffer("_Indices", _indexBuffer);
+
+        if (CreateTexture3D(cmd, _baseMaps, ref _baseMapArray))
+            RayTracingShader.SetTexture(0, "_baseMapArray", _baseMapArray);
+        if (CreateTexture3D(cmd, _normalMaps, ref _normalMapArray))
+            RayTracingShader.SetTexture(0, "_normalMapArray", _normalMapArray);
+        if (CreateTexture3D(cmd, _MASKMaps, ref _MASKMapArray))
+            RayTracingShader.SetTexture(0, "_MaskMapArray", _MASKMapArray);
     }
 }
