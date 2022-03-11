@@ -105,6 +105,9 @@ public class RayTracingPass : ScriptableRenderPass
             var mainLight = renderingData.lightData.visibleLights[renderingData.lightData.mainLightIndex].light;
             m_rayTracing.RayTracingShader.SetVector(DirectionalLightId, new Vector4(mainLight.transform.forward.x,mainLight.transform.forward.y,mainLight.transform.forward.z, mainLight.intensity));
 
+            //RayTracing Objects
+            m_rayTracing.SetRayTracingObjectsParameters();
+
             //Compute
             int threadGroupsX = Mathf.CeilToInt(w / 8.0f);
             int threadGroupsY = Mathf.CeilToInt(h / 8.0f);

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -26,6 +27,18 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
 
     private static ComputeBuffer _sphereBuffer = null;
 
+    private static List<MeshObject> _meshObjects = new List<MeshObject>();
+
+    private static List<Vector3> _vertices = new List<Vector3>();
+
+    private static List<int> _indices = new List<int>();
+
+    private static ComputeBuffer _meshObjectBuffer;
+
+    private static ComputeBuffer _vertexBuffer;
+
+    private static ComputeBuffer _indexBuffer;
+
     public bool IsActive()
     {
         if(Enable.value)
@@ -38,6 +51,7 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
             else if (isSceneCreated && !CreateTestScene.value)
             {
                 isSceneCreated = false;
+                _sphereBuffer.Release();
             }
         }
         return Enable.value;
@@ -53,6 +67,13 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
         public Vector3 specular;
         public float smoothness;
         public Vector3 emission;
+    }
+
+    struct MeshObject
+    {
+        public Matrix4x4 localToWorldMatrix;
+        public int indices_offset;
+        public int indices_count;
     }
 
     private void CreateSpheres()
@@ -108,4 +129,73 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
             RayTracingShader.SetBuffer(0, "_Spheres", _sphereBuffer);
     }
 
+    private static void CreateComputeBuffer<T>(ref ComputeBuffer buffer, List<T> data, int stride) where T : struct
+    {
+        if(buffer != null)
+        {
+            if(data.Count == 0 || buffer.count != data.Count || buffer.stride != stride)
+            {
+                buffer.Release();
+                buffer = null;
+            }
+        }
+
+        if(data.Count != 0)
+        {
+            if(buffer == null)
+            {
+                buffer = new ComputeBuffer(data.Count, stride);
+            }
+
+            buffer.SetData(data);
+        }
+    }
+
+    private void SetComputeBuffer(string name, ComputeBuffer buffer)
+    {
+        if(buffer != null)
+        {
+            RayTracingShader.SetBuffer(0, name, buffer);
+        }
+    }
+
+    private void BuildMeshObjectBuffers()
+    {
+        _meshObjects.Clear();
+        _vertices.Clear();
+        _indices.Clear();
+
+        var _rayTracingObjects = GameObject.FindGameObjectsWithTag("RayTracing");
+
+        foreach (var obj in _rayTracingObjects)
+        {
+            Mesh mesh = obj.GetComponent<MeshFilter>().sharedMesh;
+
+            int firstVertex = _vertices.Count;
+            _vertices.AddRange(mesh.vertices);
+
+            int firstIndex = _indices.Count;
+            var indices = mesh.GetIndices(0);
+            _indices.AddRange(indices.Select(index => index + firstVertex));
+
+            _meshObjects.Add(new MeshObject()
+            {
+                localToWorldMatrix = obj.transform.localToWorldMatrix,
+                indices_offset = firstIndex,
+                indices_count = indices.Length
+            });
+        }
+
+        CreateComputeBuffer(ref _meshObjectBuffer, _meshObjects, 72);
+        CreateComputeBuffer(ref _vertexBuffer, _vertices, 12);
+        CreateComputeBuffer(ref _indexBuffer, _indices, 4);
+    }
+
+    public void SetRayTracingObjectsParameters()
+    {
+        BuildMeshObjectBuffers();
+        SetComputeBuffer("_MeshObjects", _meshObjectBuffer);
+        SetComputeBuffer("_Vertices", _vertexBuffer);
+        SetComputeBuffer("_Indices", _indexBuffer);
+    }
 }

@@ -7,6 +7,7 @@ float4x4 _CameraInverseProjection;
 Texture2D<float4> _SkyboxTexture;
 SamplerState sampler_SkyboxTexture;
 static const float PI = 3.14159265f;
+static const float EPSILON = 1e-8;
 
 float2 _PixelOffset;
 int _RayBounce;
@@ -43,7 +44,17 @@ struct RayHit
     float3 emission;
 };
 
+struct MeshObject
+{
+    float4x4 localToWorldMatrix;
+    int indices_offset;
+    int indices_count;
+};
+
 StructuredBuffer<Sphere> _Spheres;
+StructuredBuffer<MeshObject> _MeshObjects;
+StructuredBuffer<float3> _Vertices;
+StructuredBuffer<int> _Indices;
 
 float rand()
 {
@@ -137,17 +148,78 @@ void IntersectSphere(Ray ray, inout RayHit bestHit, uint sphereIndex)
     }
 }
 
+bool IntersectTriangle_MT97(Ray ray, float3 vert0, float3 vert1, float3 vert2, inout float t, inout float u, inout float v)
+{
+    float3 edge1 = vert1 - vert0;
+    float3 edge2 = vert2 - vert0;
+    float3 pvec = cross(ray.direction, edge2);
+    float det = dot(edge1, pvec);
+    
+    if (det < EPSILON)
+        return false;
+    
+    float inv_det = 1.0f / det;
+    float3 tvec = ray.origin - vert0;
+    u = dot(tvec, pvec) * inv_det;
+    if (u < 0.0 || u > 1.0f)
+        return false;
+    
+    float3 qvec = cross(tvec, edge1);
+    v = dot(ray.direction, qvec) * inv_det;
+    if (v < 0.0 || u + v > 1.0f)
+        return false;
+    
+    t = dot(edge2, qvec) * inv_det;
+    
+    return true;
+}
+
+void IntersectMeshObject(Ray ray, inout RayHit bestHit, MeshObject meshObject)
+{
+    uint offset = meshObject.indices_offset;
+    uint count = offset + meshObject.indices_count;
+    for (uint i = offset; i < count; i+=3)
+    {
+        float3 v0 = (mul(meshObject.localToWorldMatrix, float4(_Vertices[_Indices[i]], 1))).xyz;
+        float3 v1 = (mul(meshObject.localToWorldMatrix, float4(_Vertices[_Indices[i + 1]], 1))).xyz;
+        float3 v2 = (mul(meshObject.localToWorldMatrix, float4(_Vertices[_Indices[i + 2]], 1))).xyz;
+        float t, u, v;
+        if(IntersectTriangle_MT97(ray, v0, v1, v2, t, u, v))
+        {
+            if(t>0 && t < bestHit.distance)
+            {
+                bestHit.distance = t;
+                bestHit.position = ray.origin + t * ray.direction;
+                bestHit.normal = normalize(cross(v1 - v0, v2 - v0));
+                bestHit.albedo = 0.0f;
+                bestHit.specular = 0.995f;
+                bestHit.smoothness = 0.99f;
+                bestHit.emission = 0.0f;
+            }
+        }
+    }
+}
+
 RayHit Trace(Ray ray)
 {
-	RayHit bestHit = CreateRayHit();
+    RayHit bestHit = CreateRayHit();
+    uint count, stride, i;
     
     IntersectGroundPlane(ray, bestHit);
-        
-    uint numSpheres, stride;
-    _Spheres.GetDimensions(numSpheres, stride);
-    for (uint i = 0; i < numSpheres; i++)
+    
+    _Spheres.GetDimensions(count, stride);
+    for (i = 0; i < count; i++)
+    {
         IntersectSphere(ray, bestHit, i);
-	return bestHit;
+    }
+    
+    _MeshObjects.GetDimensions(count, stride);
+    for (i = 0; i < count;i++)
+    {
+        IntersectMeshObject(ray, bestHit, _MeshObjects[i]);
+    }
+    
+    return bestHit;
 }
 
 float3x3 GetTangentSpace(float3 normal)
