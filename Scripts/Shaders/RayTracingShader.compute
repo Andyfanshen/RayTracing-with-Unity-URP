@@ -55,12 +55,6 @@ StructuredBuffer<Sphere> _Spheres;
 StructuredBuffer<MeshObject> _MeshObjects;
 StructuredBuffer<float3> _Vertices;
 StructuredBuffer<int> _Indices;
-Texture2DArray<float4> _baseMapArray;
-SamplerState sampler_baseMapArray;
-Texture2DArray<float4> _normalMapArray;
-SamplerState sampler_normalMapArray;
-Texture2DArray<float4> _MASKMapArray;
-SamplerState sampler_MASKMapArray;
 
 float rand()
 {
@@ -197,8 +191,8 @@ void IntersectMeshObject(Ray ray, inout RayHit bestHit, MeshObject meshObject)
                 bestHit.distance = t;
                 bestHit.position = ray.origin + t * ray.direction;
                 bestHit.normal = normalize(cross(v1 - v0, v2 - v0));
-                bestHit.albedo = _baseMapArray.SampleLevel(sampler_baseMapArray, float3(0.5f, 0.5f, 0.5f), 0).xyz;
-                bestHit.specular = 0.00f;
+                bestHit.albedo = 0.00f;
+                bestHit.specular = 0.65f;
                 bestHit.smoothness = 0.95f;
                 bestHit.emission = 0.00f;
 

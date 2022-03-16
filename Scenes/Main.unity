@@ -447,9 +447,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 647641995}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.194, y: 1.049, z: -2.651}
-  m_LocalScale: {x: 0.54038, y: 0.54038, z: 0.54038}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.319, y: 1, z: -2.728}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 834217226}
@@ -467,9 +467,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 940012e1ea39d624ebbe4bdc4fd1116d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseTexture: {fileID: 2800000, guid: 52b69d67fe31bf24ea330012f80b82d0, type: 3}
-  normalTexture: {fileID: 2800000, guid: 55eaa53217413d644bb99287a8309344, type: 3}
-  MASKTexture: {fileID: 2800000, guid: 98016d67bcae626479438be6eec7cd2c, type: 3}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,9 +662,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 940012e1ea39d624ebbe4bdc4fd1116d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseTexture: {fileID: 2800000, guid: 52b69d67fe31bf24ea330012f80b82d0, type: 3}
-  normalTexture: {fileID: 2800000, guid: 55eaa53217413d644bb99287a8309344, type: 3}
-  MASKTexture: {fileID: 2800000, guid: 98016d67bcae626479438be6eec7cd2c, type: 3}
 --- !u!1 &1588780606
 GameObject:
   m_ObjectHideFlags: 0
@@ -759,7 +753,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1588780606}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.235, y: 0.834, z: -1.083}
+  m_LocalPosition: {x: 1.08, y: 0.834, z: 1.38}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -778,9 +772,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 940012e1ea39d624ebbe4bdc4fd1116d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseTexture: {fileID: 2800000, guid: 52b69d67fe31bf24ea330012f80b82d0, type: 3}
-  normalTexture: {fileID: 2800000, guid: 55eaa53217413d644bb99287a8309344, type: 3}
-  MASKTexture: {fileID: 2800000, guid: 98016d67bcae626479438be6eec7cd2c, type: 3}
 --- !u!1 &1973770578
 GameObject:
   m_ObjectHideFlags: 0
@@ -891,6 +882,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 940012e1ea39d624ebbe4bdc4fd1116d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseTexture: {fileID: 2800000, guid: 52b69d67fe31bf24ea330012f80b82d0, type: 3}
-  normalTexture: {fileID: 2800000, guid: 55eaa53217413d644bb99287a8309344, type: 3}
-  MASKTexture: {fileID: 2800000, guid: 98016d67bcae626479438be6eec7cd2c, type: 3}

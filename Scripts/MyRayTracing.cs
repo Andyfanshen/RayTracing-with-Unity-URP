@@ -20,10 +20,12 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
 
     public BoolParameter CreateTestScene = new BoolParameter(false);
 
-    [Tooltip("Random seed for test scene")]
+    [Tooltip("Random seed for test scene. Notice: Computational cost of scene creating is expensive. Reselect 'Create Test Scene' after changing random seed.")]
     public IntParameter SceneSeed = new IntParameter(0);
 
     private static bool isSceneCreated = false;
+
+    private static bool isRelease = false;
 
     private static ComputeBuffer _sphereBuffer = null;
 
@@ -33,35 +35,34 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
 
     private static List<int> _indices = new List<int>();
 
-    private static readonly int mapWidth = 1024;
-    private static readonly int mapHeight = 1024;
-    private static List<RenderTargetIdentifier> _baseMaps = new List<RenderTargetIdentifier>();
-    private static List<RenderTargetIdentifier> _normalMaps = new List<RenderTargetIdentifier>();
-    private static List<RenderTargetIdentifier> _MASKMaps = new List<RenderTargetIdentifier>();
-
     private static ComputeBuffer _meshObjectBuffer;
 
     private static ComputeBuffer _vertexBuffer;
 
     private static ComputeBuffer _indexBuffer;
 
-    private static Texture2DArray _baseMapArray = null;
-    private static Texture2DArray _normalMapArray = null;
-    private static Texture2DArray _MASKMapArray = null;
-
     public bool IsActive()
     {
-        if(Enable.value)
+        if (Enable.value)
         {
-            if (CreateTestScene.value && !isSceneCreated)
+            if (!isSceneCreated)
             {
                 CreateSpheres();
                 isSceneCreated = true;
+                isRelease = false;
             }
-            else if (isSceneCreated && !CreateTestScene.value)
+            else
             {
-                isSceneCreated = false;
-                _sphereBuffer.Release();
+                if (!CreateTestScene.value)
+                {
+                    _sphereBuffer.Release();
+                    isRelease = true;
+                }
+                else if (isRelease)
+                {
+                    CreateSpheres();
+                    isRelease = false;
+                }
             }
         }
         return Enable.value;
@@ -90,24 +91,34 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
     {
         Random.InitState(SceneSeed.value);
 
-        Vector2 SphereRadius = new Vector2(3.0f, 8.0f);
-        uint SpheresMax = 100;
-        float SpherePlacementRadius = 100.0f;
+        Vector2 SphereRadius = new Vector2(0.25f, 1.0f);
+        uint SpheresMax = 50;
+        float SpherePlacementRadius = 5.0f;
         List<Sphere> spheres = new List<Sphere>();
 
         for (int i = 0; i < SpheresMax; i++)
         {
             Sphere sphere = new Sphere();
-            sphere.radius = SphereRadius.x + Random.value * (SphereRadius.y - SphereRadius.x);
-            Vector2 randomPos = Random.insideUnitCircle * SpherePlacementRadius;
-            sphere.position = new Vector3(randomPos.x, sphere.radius, randomPos.y);
 
-            foreach (Sphere other in spheres)
+            bool setPos = true;
+            for (int j = 0; j < 100; j++)
             {
-                float minDist = sphere.radius + other.radius;
-                if (Vector3.SqrMagnitude(sphere.position - other.position) < minDist * minDist)
-                    goto SkipSphere;
+                sphere.radius = SphereRadius.x + Random.value * (SphereRadius.y - SphereRadius.x);
+                Vector2 randomPos = Random.insideUnitCircle * SpherePlacementRadius;
+                sphere.position = new Vector3(randomPos.x, sphere.radius, randomPos.y);
+
+                foreach (Sphere other in spheres)
+                {
+                    float minDist = sphere.radius + other.radius;
+                    if (Vector3.SqrMagnitude(sphere.position - other.position) < minDist * minDist)
+                    {
+                        setPos = false;
+                        break;
+                    }
+                }
+                if (setPos) break;
             }
+            if (!setPos) continue;
 
             Color color = Random.ColorHSV();
             float chance = Random.value;
@@ -125,8 +136,6 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
             }
 
             spheres.Add(sphere);
-
-        SkipSphere: continue;
         }
 
         if (_sphereBuffer != null) _sphereBuffer.Release();
@@ -161,21 +170,6 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
         }
     }
 
-    private bool CreateTexture3D(CommandBuffer cmd, List<RenderTargetIdentifier> textures, ref Texture2DArray texture2DArray)
-    {
-        if(textures.Count>0)
-        {
-            texture2DArray = new Texture2DArray(mapWidth, mapHeight, textures.Count, TextureFormat.RGBA32, true, true);
-            for (int i = 0; i < textures.Count; i++)
-            {
-                cmd.ConvertTexture(textures[i], 0, texture2DArray, i);
-            }
-
-            return true;
-        }
-        return false;
-    }
-
     private void SetComputeBuffer(string name, ComputeBuffer buffer)
     {
         if(buffer != null)
@@ -184,14 +178,11 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
         }
     }
 
-    public void SetRayTracingObjectsParameters(CommandBuffer cmd)
+    public void SetRayTracingObjectsParameters()
     {
         _meshObjects.Clear();
         _vertices.Clear();
         _indices.Clear();
-        _baseMaps.Clear();
-        _normalMaps.Clear();
-        _MASKMaps.Clear();
 
         var _rayTracingObjects = GameObject.FindGameObjectsWithTag("RayTracing");
 
@@ -212,8 +203,6 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
                 indices_offset = firstIndex,
                 indices_count = indices.Length
             });
-
-            obj.GetComponent<RayTracingMat>().AddTextures(_baseMaps, _normalMaps, _MASKMaps);
         }
 
         CreateComputeBuffer(ref _meshObjectBuffer, _meshObjects, 72);
@@ -223,12 +212,5 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
         SetComputeBuffer("_MeshObjects", _meshObjectBuffer);
         SetComputeBuffer("_Vertices", _vertexBuffer);
         SetComputeBuffer("_Indices", _indexBuffer);
-
-        if (CreateTexture3D(cmd, _baseMaps, ref _baseMapArray))
-            RayTracingShader.SetTexture(0, "_baseMapArray", _baseMapArray);
-        if (CreateTexture3D(cmd, _normalMaps, ref _normalMapArray))
-            RayTracingShader.SetTexture(0, "_normalMapArray", _normalMapArray);
-        if (CreateTexture3D(cmd, _MASKMaps, ref _MASKMapArray))
-            RayTracingShader.SetTexture(0, "_MaskMapArray", _MASKMapArray);
     }
 }

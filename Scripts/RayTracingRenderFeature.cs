@@ -84,7 +84,7 @@ public class RayTracingPass : ScriptableRenderPass
 
     void Render(CommandBuffer cmd, ref RenderingData renderingData)
     {
-        ref var cameraData = ref renderingData.cameraData;        
+        ref var cameraData = ref renderingData.cameraData;
         var w = cameraData.camera.scaledPixelWidth;
         var h = cameraData.camera.scaledPixelHeight;
 
@@ -103,16 +103,16 @@ public class RayTracingPass : ScriptableRenderPass
 
             //SceneLights
             var mainLight = renderingData.lightData.visibleLights[renderingData.lightData.mainLightIndex].light;
-            m_rayTracing.RayTracingShader.SetVector(DirectionalLightId, new Vector4(mainLight.transform.forward.x,mainLight.transform.forward.y,mainLight.transform.forward.z, mainLight.intensity));
+            m_rayTracing.RayTracingShader.SetVector(DirectionalLightId, new Vector4(mainLight.transform.forward.x, mainLight.transform.forward.y, mainLight.transform.forward.z, mainLight.intensity));
 
             //RayTracing Objects
-            m_rayTracing.SetRayTracingObjectsParameters(cmd);
+            m_rayTracing.SetRayTracingObjectsParameters();
 
             //Compute
             int threadGroupsX = Mathf.CeilToInt(w / 8.0f);
             int threadGroupsY = Mathf.CeilToInt(h / 8.0f);
             m_rayTracing.RayTracingShader.Dispatch(0, threadGroupsX, threadGroupsY, 1);
-        } 
+        }
 
         //Accumulate Sampling
         if(m_rayTracing.AccSample.value)

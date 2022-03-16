@@ -96,7 +96,7 @@ MonoBehaviour:
     m_Value: 8
   CreateTestScene:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   SceneSeed:
     m_OverrideState: 1
     m_Value: 0
