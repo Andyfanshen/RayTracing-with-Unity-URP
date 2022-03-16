@@ -78,6 +78,7 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
         public Vector3 specular;
         public float smoothness;
         public Vector3 emission;
+        public float ior;
     }
 
     struct MeshObject
@@ -122,12 +123,19 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
 
             Color color = Random.ColorHSV();
             float chance = Random.value;
-            if(chance < 0.8f)
+            if (chance < 0.8f)
             {
                 bool metal = Random.value < 0.4f;
                 sphere.albedo = metal ? Vector4.zero : new Vector4(color.r, color.g, color.b);
                 sphere.specular = metal ? new Vector4(color.r, color.g, color.b) : new Vector4(0.04f, 0.04f, 0.04f);
                 sphere.smoothness = Random.value;
+            }
+            else if (chance > 0.9f)
+            {
+                sphere.albedo = new Vector4(1.0f, 1.0f, 1.0f);
+                sphere.specular = new Vector4(color.r, color.g, color.b);
+                sphere.smoothness = Random.value;
+                sphere.ior = 1.5f;
             }
             else
             {
@@ -141,7 +149,7 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
         if (_sphereBuffer != null) _sphereBuffer.Release();
         if (spheres.Count > 0)
         {
-            _sphereBuffer = new ComputeBuffer(spheres.Count, 56);
+            _sphereBuffer = new ComputeBuffer(spheres.Count, 60);
             _sphereBuffer.SetData(spheres);
         }
         if (_sphereBuffer != null)
