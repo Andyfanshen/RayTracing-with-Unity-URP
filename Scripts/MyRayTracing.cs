@@ -27,6 +27,8 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
 
     private static bool isRelease = false;
 
+    public static bool isSetObjects = false;
+
     private static ComputeBuffer _sphereBuffer = null;
 
     private static List<MeshObject> _meshObjects = new List<MeshObject>();
@@ -78,7 +80,6 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
         public Vector3 specular;
         public float smoothness;
         public Vector3 emission;
-        public float ior;
     }
 
     struct MeshObject
@@ -86,6 +87,11 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
         public Matrix4x4 localToWorldMatrix;
         public int indices_offset;
         public int indices_count;
+        public Vector3 albedo;
+        public Vector3 specular;
+        public float smoothness;
+        public float ior;
+        public Vector3 emission;
     }
 
     private void CreateSpheres()
@@ -130,13 +136,6 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
                 sphere.specular = metal ? new Vector4(color.r, color.g, color.b) : new Vector4(0.04f, 0.04f, 0.04f);
                 sphere.smoothness = Random.value;
             }
-            else if (chance > 0.9f)
-            {
-                sphere.albedo = new Vector4(1.0f, 1.0f, 1.0f);
-                sphere.specular = new Vector4(color.r, color.g, color.b);
-                sphere.smoothness = Random.value;
-                sphere.ior = 1.5f;
-            }
             else
             {
                 Color emission = Random.ColorHSV(0, 1, 0, 1, 3.0f, 8.0f);
@@ -149,7 +148,7 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
         if (_sphereBuffer != null) _sphereBuffer.Release();
         if (spheres.Count > 0)
         {
-            _sphereBuffer = new ComputeBuffer(spheres.Count, 60);
+            _sphereBuffer = new ComputeBuffer(spheres.Count, 56);
             _sphereBuffer.SetData(spheres);
         }
         if (_sphereBuffer != null)
@@ -188,6 +187,8 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
 
     public void SetRayTracingObjectsParameters()
     {
+        if (isSetObjects) return;
+
         _meshObjects.Clear();
         _vertices.Clear();
         _indices.Clear();
@@ -205,20 +206,42 @@ public class MyRayTracing : VolumeComponent, IPostProcessComponent
             var indices = mesh.GetIndices(0);
             _indices.AddRange(indices.Select(index => index + firstVertex));
 
+            Vector3 albedo = 0.5f * Vector3.one;
+            Vector3 specular = Vector3.zero;
+            Vector3 emission = Vector3.zero;
+            float smoothness = 0.2f;
+            float ior = 0.0f;
+            var mat = obj.GetComponent<RayTracingMat>();
+            if (mat)
+            {
+                albedo = new Vector3(mat.albedo.r, mat.albedo.g, mat.albedo.b);
+                specular = new Vector3(mat.specular.r, mat.specular.g, mat.specular.b);
+                emission = new Vector3(mat.emission.r, mat.emission.g, mat.emission.b);
+                smoothness = mat.smoothness;
+                ior = mat.IOR;
+            }
+
             _meshObjects.Add(new MeshObject()
             {
                 localToWorldMatrix = obj.transform.localToWorldMatrix,
                 indices_offset = firstIndex,
-                indices_count = indices.Length
+                indices_count = indices.Length,
+                albedo = albedo,
+                specular = specular,
+                emission = emission,
+                smoothness = smoothness,
+                ior = ior
             });
         }
 
-        CreateComputeBuffer(ref _meshObjectBuffer, _meshObjects, 72);
+        CreateComputeBuffer(ref _meshObjectBuffer, _meshObjects, 116);
         CreateComputeBuffer(ref _vertexBuffer, _vertices, 12);
         CreateComputeBuffer(ref _indexBuffer, _indices, 4);
 
         SetComputeBuffer("_MeshObjects", _meshObjectBuffer);
         SetComputeBuffer("_Vertices", _vertexBuffer);
         SetComputeBuffer("_Indices", _indexBuffer);
+
+        isSetObjects = true;
     }
 }

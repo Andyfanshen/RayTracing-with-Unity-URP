@@ -121,6 +121,7 @@ public class RayTracingPass : ScriptableRenderPass
             {
                 cachingC2W = cameraData.GetViewMatrix().inverse;
                 cachingTexture = new RenderTexture(w, h, 0, RenderTextureFormat.DefaultHDR);
+                MyRayTracing.isSetObjects = false;
                 currentSample = 0;
             }
 
