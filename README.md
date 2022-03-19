@@ -3,7 +3,7 @@
 We add a path tracing pass before postprocess pass by renderer feature, that's why we can run path tracing with Unity URP renderer.
 To enable the raytracing feature, you should:
 * Clone the scripts to your Unity-URP project assets (It must be Unity 2022.1+)
-* Create URP Asset(with Universal Renderer) in you assets(by Create->Rendering->URP Asset)
+* Create URP Asset(with Universal Renderer) in your assets(by Create->Rendering->URP Asset)
 * Unity will create two assets: "\*\*.asset" and "\*\*_Renderer.asset"
 * Choose "\*\*_Renderer.asset", click "Add Renderer Feature" button at the bottom of the Inspector panel
 * Choose "Ray Tracing Render Feature"
@@ -15,3 +15,4 @@ Now, you have enabled the raytracing feature in your pipeline asset, the followi
 
 A test scene may like this:
 ![图片](https://user-images.githubusercontent.com/33785908/157629119-299b1f9e-26db-41ce-8282-c1fbfa0e66db.png)
+![image](https://user-images.githubusercontent.com/33785908/159110271-2d00e941-dc66-4817-b412-40dc553e7ada.png)
