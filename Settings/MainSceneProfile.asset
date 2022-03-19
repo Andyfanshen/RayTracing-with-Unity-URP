@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b2db86121404754db890f4c8dfe81b2, type: 3}
   m_Name: Bloom
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   threshold:
     m_OverrideState: 1
     m_Value: 4.04
@@ -40,6 +40,38 @@ MonoBehaviour:
   dirtIntensity:
     m_OverrideState: 0
     m_Value: 0
+--- !u!114 &-7589793220525862827
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 352d517c2f5b5c347acc5918293063f0, type: 3}
+  m_Name: MyRayTracing
+  m_EditorClassIdentifier: 
+  active: 1
+  RayTracingShader: {fileID: 7200000, guid: 43487c744ee56d341ba134e0b29c26aa, type: 3}
+  Enable:
+    m_OverrideState: 1
+    m_Value: 0
+  SkyboxTexture:
+    m_OverrideState: 1
+    m_Value: {fileID: 2800000, guid: 2d2403ef38fe78a4780fdd6b918cb613, type: 3}
+  AccSample:
+    m_OverrideState: 1
+    m_Value: 1
+  rayBounce:
+    m_OverrideState: 1
+    m_Value: 8
+  CreateTestScene:
+    m_OverrideState: 1
+    m_Value: 0
+  SceneSeed:
+    m_OverrideState: 1
+    m_Value: 0
 --- !u!114 &-7011558710299706105
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -52,7 +84,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 899c54efeace73346a0a16faa3afe726, type: 3}
   m_Name: Vignette
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   color:
     m_OverrideState: 0
     m_Value: {r: 0, g: 0, b: 0, a: 1}
@@ -116,39 +148,7 @@ MonoBehaviour:
   - {fileID: 849379129802519247}
   - {fileID: -7893295128165547882}
   - {fileID: -7011558710299706105}
-  - {fileID: 602259151534852256}
---- !u!114 &602259151534852256
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 352d517c2f5b5c347acc5918293063f0, type: 3}
-  m_Name: MyRayTracing
-  m_EditorClassIdentifier: 
-  active: 1
-  RayTracingShader: {fileID: 7200000, guid: 43487c744ee56d341ba134e0b29c26aa, type: 3}
-  Enable:
-    m_OverrideState: 1
-    m_Value: 0
-  SkyboxTexture:
-    m_OverrideState: 1
-    m_Value: {fileID: 2800000, guid: 14fcd0a3c3a1ebb4191b6ef92df2a098, type: 3}
-  AccSample:
-    m_OverrideState: 1
-    m_Value: 1
-  rayBounce:
-    m_OverrideState: 1
-    m_Value: 8
-  CreateTestScene:
-    m_OverrideState: 1
-    m_Value: 0
-  SceneSeed:
-    m_OverrideState: 1
-    m_Value: 0
+  - {fileID: -7589793220525862827}
 --- !u!114 &849379129802519247
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -161,7 +161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97c23e3b12dc18c42a140437e53d3951, type: 3}
   m_Name: Tonemapping
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   mode:
     m_OverrideState: 1
     m_Value: 1

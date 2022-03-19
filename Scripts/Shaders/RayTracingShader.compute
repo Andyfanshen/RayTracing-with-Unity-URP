@@ -126,9 +126,9 @@ void IntersectGroundPlane(Ray ray, inout RayHit bestHit)
         bestHit.distance = t;
         bestHit.position = ray.origin + t * ray.direction;
         bestHit.normal = float3(0.0f, 1.0f, 0.0f);
-        bestHit.albedo = 0.8f;
+        bestHit.albedo = 0.25f;
         bestHit.specular = 0.03f;
-        bestHit.smoothness = 0.2f;
+        bestHit.smoothness = 0.0f;
         bestHit.emission = 0.00f;
         bestHit.ior = 0.00f;
     }
