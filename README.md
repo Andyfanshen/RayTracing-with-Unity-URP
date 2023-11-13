@@ -13,8 +13,7 @@ Now, you have enabled the raytracing feature in your pipeline asset, the followi
 * Choose your Volume(current camera under effect), add override "My Ray Tracing"
 * Disable all other effects (e.g. Tonemapping, Bloom, Vignette), some post processings may conflict with the raytracing feature.
 * **Enable all items and configure them**
-![Uploading 图片.png…]()
-
+![图片](https://github.com/Andyfanshen/RayTracing-with-Unity-URP/assets/33785908/634829fb-f50e-41f1-91e3-bec7fdd6c7b7)
 
 A test scene may like this:
 ![图片](https://user-images.githubusercontent.com/33785908/157629119-299b1f9e-26db-41ce-8282-c1fbfa0e66db.png)
