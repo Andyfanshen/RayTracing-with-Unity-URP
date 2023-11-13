@@ -11,7 +11,10 @@ To enable the raytracing feature, you should:
 
 Now, you have enabled the raytracing feature in your pipeline asset, the following steps tell you how to run a test scene with path tracing
 * Choose your Volume(current camera under effect), add override "My Ray Tracing"
+* Disable all other effects (e.g. Tonemapping, Bloom, Vignette), some post processings may conflict with the raytracing feature.
 * **Enable all items and configure them**
+![Uploading 图片.png…]()
+
 
 A test scene may like this:
 ![图片](https://user-images.githubusercontent.com/33785908/157629119-299b1f9e-26db-41ce-8282-c1fbfa0e66db.png)
