@@ -1,4 +1,9 @@
 # RayTracing-with-Unity-URP
+
+## Update 2024.4
+Maintance Stopped!
+If you would like a more stable, robust and efficient path tracing renderer with Unity Engine, and you also have the device supports hardware-raytracing (i.e. RTX series GPU cards), you may try this project: https://github.com/Andyfanshen/CustomRayTracing.
+
 ## Renderer Feature
 We add a path tracing pass before postprocess pass by renderer feature, that's why we can run path tracing with Unity URP renderer.
 To enable the raytracing feature, you should:
